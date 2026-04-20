@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STEAM 實作教師評語助手</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #f0f2f5; }
+        .dimension-card { transition: all 0.2s; border: 1px solid #e5e7eb; }
+        .dimension-card:hover { border-color: #10b981; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+        /* 自訂捲軸樣式 */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-4xl mx-auto space-y-6">
+        <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
+            <div class="bg-gradient-to-r from-emerald-500 to-teal-400 p-8 text-white">
+                <h1 class="text-3xl font-bold">🛠️ STEAM 實作評語助手</h1>
+                <p class="opacity-90 mt-2">溫馨鼓勵語氣｜多維度表現｜自動記錄追蹤</p>
+            </div>
+
+            <div class="p-8">
+                <div class="mb-8 p-4 bg-emerald-50 rounded-xl">
+                    <label class="block text-sm font-bold text-emerald-900 mb-2">學生姓名</label>
+                    <input type="text" id="studentName" placeholder="請輸入學生姓名 (如：小明)" class="w-full p-3 rounded-lg border border-emerald-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm text-lg">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                    <div class="dimension-card p-4 rounded-xl bg-white">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">1. 學生個性</label>
+                        <select id="personality" class="w-full p-2 rounded border-gray-200 text-sm focus:ring-emerald-500">
+                            <option value="pos">🌟 正向：活潑開朗</option>
+                            <option value="neu">😐 中性：溫和穩定</option>
+                            <option value="imp">🌱 鼓勵：較慢熟內斂</option>
+                        </select>
+                    </div>
+
+                    <div class="dimension-card p-4 rounded-xl bg-white">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">2. 聽講時表現</label>
+                        <select id="lecture" class="w-full p-2 rounded border-gray-200 text-sm focus:ring-emerald-500">
+                            <option value="pos">🌟 正向：專注互動</option>
+                            <option value="neu">😐 中性：安靜聽講</option>
+                            <option value="imp">🌱 鼓勵：需多提醒專注</option>
+                        </select>
+                    </div>
+
+                    <div class="dimension-card p-4 rounded-xl bg-white">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">3. 課堂實作表現</label>
+                        <select id="handsOn" class="w-full p-2 rounded border-gray-200 text-sm focus:ring-emerald-500">
+                            <option value="pos">🌟 正向：獨立純熟</option>
+                            <option value="neu">😐 中性：按部就班</option>
+                            <option value="imp">🌱 鼓勵：需協助工具使用</option>
+                        </select>
+                    </div>
+
+                    <div class="dimension-card p-4 rounded-xl bg-white">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">4. 自由創作表現</label>
+                        <select id="creative" class="w-full p-2 rounded border-gray-200 text-sm focus:ring-emerald-500">
+                            <option value="pos">🌟 正向：巧思豐富</option>
+                            <option value="neu">😐 中性：完成度高</option>
+                            <option value="imp">🌱 鼓勵：多嘗試自身想法</option>
+                        </select>
+                    </div>
+
+                    <div class="dimension-card p-4 rounded-xl bg-white">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">5. 與同學相處</label>
+                        <select id="social" class="w-full p-2 rounded border-gray-200 text-sm focus:ring-emerald-500">
+                            <option value="pos">🌟 正向：樂於分享</option>
+                            <option value="neu">😐 中性：和睦相處</option>
+                            <option value="imp">🌱 鼓勵：可多參與討論</option>
+                        </select>
+                    </div>
+
+                    <div class="dimension-card p-4 rounded-xl bg-white">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">6. 協助整理環境</label>
+                        <select id="cleanup" class="w-full p-2 rounded border-gray-200 text-sm focus:ring-emerald-500">
+                            <option value="pos">🌟 正向：主動負責</option>
+                            <option value="neu">😐 中性：配合整理</option>
+                            <option value="imp">🌱 鼓勵：需提醒善後</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button onclick="generateComment()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 px-6 rounded-2xl transition shadow-lg hover:shadow-emerald-200 mb-6 flex items-center justify-center gap-2 text-lg">
+                    ✨ 隨機生成 STEAM 評語
+                </button>
+
+                <div class="relative group">
+                    <textarea id="result" rows="6" class="w-full p-6 bg-gray-50 border-2 border-dashed border-gray-200 rounded-2xl text-gray-700 leading-loose resize-none focus:outline-none focus:border-emerald-300" placeholder="評語將根據上方選項自動合成..."></textarea>
+                    <button onclick="copyText()" class="absolute bottom-4 right-4 bg-gray-800 text-white font-medium py-2 px-5 rounded-xl hover:bg-black transition shadow-md flex items-center gap-2">
+                        📋 複製並記錄
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100">
+            <div class="bg-gray-100 py-3 px-6 border-b border-gray-200 flex justify-between items-center">
+                <h2 class="text-gray-700 font-bold flex items-center gap-2">
+                    📝 學生評語暫存記錄
+                </h2>
+                <span class="text-xs text-gray-500 bg-white px-2 py-1 rounded-full border border-gray-200">同名會自動覆蓋</span>
+            </div>
+            <div class="p-6">
+                <div id="historyContainer" class="space-y-3 max-h-60 overflow-y-auto pr-2">
+                    <p class="text-gray-400 text-sm text-center py-4" id="emptyMsg">尚未有任何記錄，按下「複製並記錄」後會顯示在這裡。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 每個維度、每個等級擴充至 5 句，語氣統一親切鼓勵，STEAM 實作情境
+        const commentDb = {
+            personality: {
+                pos: ["${name}是一位充滿活力的孩子，總是能為班上帶來熱情的氣氛。", "很喜歡${name}開朗的性格，面對新的課程內容總是躍躍欲試。", "${name}具備極佳的正向特質，學習時充滿朝氣，令人印象深刻。", "在課堂中，${name}展現了積極主動的態度，是個很棒的小創客。", "每次看到${name}帶著燦爛的笑容進教室，老師都覺得充滿能量。"],
+                neu: ["${name}在班級中表現穩定，性格溫和且總是很有禮貌。", "${name}是個安靜且懂事的孩子，學習過程非常平穩踏實。", "${name}情緒穩定，總是用心參與每堂課，是個讓老師放心的好學生。", "很欣賞${name}穩重不浮躁的特質，能靜下心來面對挑戰。", "${name}處事態度溫婉，在課堂上總是表現出認真向上的精神。"],
+                imp: ["${name}在課堂上比較內斂，老師會多鼓勵他表達自己的想法，建立自信喔！", "${name}是個細心的孩子，若未來能更放開心胸參與互動，一定會有更多收穫。", "雖然${name}有時比較慢熟，但只要給予時間適應，就能看見他的進步。", "期待${name}之後能更大方地展現自己，相信他有很棒的潛力！", "老師會持續陪伴${name}，鼓勵他多主動參與，讓他能更自在地享受學習。"]
+            },
+            lecture: {
+                pos: ["聽講時眼神總是閃閃發光，對於科學原理充滿濃厚的興趣。", "非常專心聽講，而且能精準回答老師提出的科學概念。", "求知慾很強，課堂中常常主動發問，想要深入了解背後的原理。", "很棒的是，${name}能把老師講解的知識點吸收，並主動提出自己的見解。", "專注力極佳，總能跟上老師的節奏，是個熱愛學習的孩子。"],
+                neu: ["能安靜且穩定地聽完科學原理解說，並了解本堂課的重點。", "上課態度認真，能順利跟上進度，將老師教導的觀念記在心裡。", "聽講時很守秩序，是一位能認真吸收知識的學習者。", "對於課堂講解的內容都有很好的理解，表現得四平八穩。", "會跟著老師的引導點頭回應，學習狀態十分穩定。"],
+                imp: ["有時候稍微容易被身邊的事物吸引，但只要老師輕輕提醒，就能馬上把注意力拉回來。", "在講解較難的原理時，偶爾會有點小分心，不過一到動手做時就又會充滿精神！", "老師會多用有趣的視覺輔助，幫助${name}在聽講時能維持更長時間的專注力。", "建議上課時可以多跟著老師的互動節奏走，相信吸收效果會更棒喔！", "雖然偶爾會神遊，但${name}其實都有把重點聽進去，未來若能更專注一定更棒。"]
+            },
+            handsOn: {
+                pos: ["實作時工具使用非常純熟，能獨立且精確地完成作品組裝。", "動手能力極強！不需要太多協助就能把科學原理完美應用在作品上。", "在操作工具時展現了細心與耐心，每一個步驟都毫不馬虎。", "很喜歡看${name}動手做的樣子，步驟清晰，是個非常有架式的實作小高手。", "能將設計圖順利轉化為實際的作品，手眼協調與實作能力值得大大稱讚。"],
+                neu: ["能按部就班地跟著步驟進行，循序漸進地完成自己的實作作品。", "具備不錯的基本實作能力，能穩穩地將零件組裝到位。", "在老師的引導下，都能順利且平穩地完成每一次的課堂任務。", "操作工具時很守規矩，能確實完成基本的組裝要求。", "實作過程很踏實，一步一步把作品完成，非常有耐心。"],
+                imp: ["在操作一些新工具時稍微有些生疏，但只要多練習幾次，一定會越來越順手！", "遇到實作卡關時，比較習慣先請老師幫忙。老師會鼓勵${name}多試著自己找答案，相信他做得到！", "組裝零件時偶爾會遇到小挫折，老師會帶著他一起慢慢克服，培養獨立動手的能力。", "目前在實作上還需要老師稍微多一些的從旁引導，期待他未來能越來越獨立。", "使用工具的力道和技巧還在學習中，只要保持不怕犯錯的心，一定能掌握得更好。"]
+            },
+            creative: {
+                pos: ["在自由創作時間總能發揮豐富的想像力，讓作品充滿獨特的個人風格。", "不侷限於老師的範例，能巧妙地將學到的科學原理與自己的創意結合。", "作品的構思非常特別，常常能在細節中發現${name}充滿巧思的設計。", "舉一反三的能力很強！總能為原本的作品加上令人驚豔的新功能。", "是個充滿創意的小發明家，每次的作品都讓人眼睛為之一亮。"],
+                neu: ["作品結構非常完整，能確實地把今天學到的原理應用在成品中。", "能參考老師的範例，並加入一點自己的小變化，完成度令人滿意。", "穩紮穩打地完成創作，作品外觀與功能都有達到很棒的水準。", "創作內容符合邏輯，順利呈現了課堂所學，表現得很不錯。", "是個用心創作的孩子，每一次的作品都做得很精緻、很到位。"],
+                imp: ["目前的創作比較傾向於模仿老師的範例，期待未來能看到${name}大膽加入更多自己的想法！", "在自由發揮時有時候會猶豫不決，老師會多鼓勵他相信自己的直覺，勇敢嘗試。", "還在摸索屬於自己的創作風格，只要放膽去設計，作品一定會更有趣。", "創作過程中偶爾會缺乏自信，老師會引導他多觀察生活，激發更多靈感。", "雖然現在的裝飾與變化較少，但只要願意開始嘗試，創意就會源源不絕喔。"]
+            },
+            social: {
+                pos: ["很樂於擔任小幫手，不僅自己做得好，還會熱心指導身邊遇到困難的同學。", "在團隊中總能帶動歡樂的氣氛，樂於分享自己的材料與想法。", "是大家公認的好夥伴，能積極與同學合作，一起完成挑戰。", "溝通能力很棒，遇到問題時能和同學互相討論、找出解決方案。", "充滿同理心，看到同學需要幫忙時總會第一時間伸出援手。"],
+                neu: ["能與同學和睦相處，在課堂中維持著良好、友善的互動關係。", "配合度很高，在需要分組分享時，都能默默地給予支持。", "是個合群的孩子，與大家互動自然，不會與同學起衝突。", "在自己的座位上安份守己，同時也能友善地回應同學的提問。", "與同儕間的相處平穩愉快，能一起營造良好的學習氛圍。"],
+                imp: ["目前比較習慣獨自專注在自己的作品上，老師會鼓勵他多跟身邊的同學交流心得。", "偶爾對自己的作品太有主見，老師會引導他學習聆聽別人的建議，體會合作的樂趣。", "在分享環節比較害羞，期待他未來能勇敢地向大家介紹自己的心血結晶。", "還在學習如何用更柔軟的方式與同學溝通，這是一個很好的成長機會。", "有時候會因為太投入實作而忽略了周遭，老師會提醒他適時抬起頭和同學互動。"]
+            },
+            cleanup: {
+                pos: ["課程結束後總是主動收拾桌面，甚至會幫忙檢查地上的碎屑，非常負責任！", "不需要老師特別提醒，就能把工具和材料分類得整整齊齊，動作俐落。", "環境維護的意識極佳，是老師整理教室時最棒的神隊友。", "收拾的速度快又確實，還會熱心提醒其他同學一起把環境復原。", "懂得愛惜工具，每次歸位都做得非常完美，好習慣值得大大讚賞。"],
+                neu: ["能配合班級規定，在下課前把自己的桌面和工具收好。", "會依照老師的指示將物品歸位，負責地完成自己的善後工作。", "清理的動作確實，不會在座位上留下垃圾，表現得很棒。", "願意配合團體的收拾時間，工作效率良好，維持了環境的整潔。", "能把自己弄亂的區域整理乾淨，是個守規矩的好孩子。"],
+                imp: ["偶爾會因為急著下課而忘記收好工具，但只要老師提醒一聲，就會趕快回來整理。", "整理桌面的速度稍微慢了一些，老師會帶著他練習更有效率的分類與收納。", "還需要慢慢養成「隨手整理」的好習慣，相信多提醒幾次就會記住了。", "有時會把材料散落在桌面上，老師會鼓勵他邊做邊收，保持工作區的清爽。", "器材歸位有時會放錯位置，藉由每次的練習，會越來越清楚工具的「家」在哪裡。"]
+            }
+        };
+
+        // 儲存已生成的評語 { "小明": "評語內容..." }
+        const historyData = {};
+
+        function generateComment() {
+            const name = document.getElementById('studentName').value || "這位同學";
+            const dimensions = ['personality', 'lecture', 'handsOn', 'creative', 'social', 'cleanup'];
+            let resultParts = [];
+
+            dimensions.forEach(dim => {
+                const level = document.getElementById(dim).value;
+                const phrases = commentDb[dim][level];
+                // 隨機選一句
+                let phrase = phrases[Math.floor(Math.random() * phrases.length)];
+                resultParts.push(phrase);
+            });
+
+            let finalComment = resultParts.join(' ');
+            finalComment = finalComment.replace(/\${name}/g, name);
+
+            document.getElementById('result').value = finalComment;
+        }
+
+        function copyText() {
+            const resultText = document.getElementById('result');
+            const comment = resultText.value.trim();
+            
+            if(!comment) {
+                alert('請先點擊生成評語喔！');
+                return;
+            }
+
+            // 複製到剪貼簿
+            resultText.select();
+            document.execCommand('copy');
+            
+            // 記錄到暫存區
+            const nameInput = document.getElementById('studentName').value.trim();
+            const studentName = nameInput !== "" ? nameInput : "未命名學生";
+            
+            updateHistory(studentName, comment);
+            
+            // 視覺回饋
+            const btn = event.currentTarget;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '✅ 已複製！';
+            btn.classList.add('bg-emerald-600');
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.classList.remove('bg-emerald-600');
+            }, 1500);
+        }
+
+        function updateHistory(name, comment) {
+            // 更新資料
+            historyData[name] = comment;
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const container = document.getElementById('historyContainer');
+            const emptyMsg = document.getElementById('emptyMsg');
+            
+            // 隱藏空訊息提示
+            if(emptyMsg) emptyMsg.style.display = 'none';
+            
+            container.innerHTML = '';
+            
+            // 將物件轉為陣列並反轉，讓最新記錄在最上面 (視需求調整)
+            const entries = Object.entries(historyData).reverse();
+
+            entries.forEach(([name, comment]) => {
+                const item = document.createElement('div');
+                item.className = "bg-white p-3 rounded-lg border border-gray-100 shadow-sm flex flex-col gap-1";
+                item.innerHTML = `
+                    <div class="font-bold text-emerald-800 text-sm">👤 ${name}</div>
+                    <div class="text-gray-600 text-xs leading-relaxed">${comment}</div>
+                `;
+                container.appendChild(item);
+            });
+        }
+    </script>
+</body>
+</html>
