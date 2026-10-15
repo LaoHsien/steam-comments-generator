@@ -3,439 +3,815 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STEAM 實作教師評語助手</title>
+    <title>STEAM 實作教師評語助手 Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
-        body { font-family: 'Noto Sans TC', sans-serif; background-color: #f0f2f5; }
-        .dimension-card { transition: all 0.2s; border: 1px solid #e5e7eb; }
-        .dimension-card:hover { border-color: #10b981; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
-        /* 自訂捲軸樣式 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #f0f4f8; }
+        .dimension-card { transition: all 0.2s ease; border: 1px solid #e2e8f0; }
+        .dimension-card:hover { border-color: #10b981; box-shadow: 0 4px 12px -2px rgb(16 185 129 / 0.12); }
+        .preset-btn { transition: all 0.15s ease; }
+        .preset-btn:active { transform: scale(0.97); }
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-4 md:p-8 text-slate-800">
     <div class="max-w-4xl mx-auto space-y-6">
-        <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
-            <div class="bg-gradient-to-r from-emerald-500 to-teal-400 p-8 text-white">
-                <h1 class="text-3xl font-bold">🛠️ STEAM 實作評語助手</h1>
-                <p class="opacity-90 mt-2">溫馨鼓勵語氣｜多維度表現｜自動記錄追蹤</p>
+        <!-- 主卡片 -->
+        <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 p-6 md:p-8 text-white">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-0.5 text-xs font-bold bg-white/20 rounded-full backdrop-blur-sm">Pro 智慧語感引擎</span>
+                        </div>
+                        <h1 class="text-2xl md:text-3xl font-bold mt-1">🛠️ STEAM 實作評語助手</h1>
+                        <p class="text-emerald-50 text-sm mt-1 opacity-90">微觀課堂行為語料庫｜上下文極性轉折銜接｜同班防撞句演算法</p>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-3 text-xs space-y-1 border border-white/15">
+                        <div class="font-bold text-emerald-100">💡 減負小撇步</div>
+                        <div>預設已停在「平穩多數派」，輸入名字可直接生成！</div>
+                        <div>第 5、6 向度支援「隨機擇一」避免結尾千篇一律。</div>
+                    </div>
+                </div>
             </div>
 
-            <div class="p-8">
-                <div class="mb-8 p-4 bg-emerald-50 rounded-xl">
-                    <label class="block text-sm font-bold text-emerald-900 mb-2">學生姓名</label>
-                    <input type="text" id="studentName" placeholder="請輸入學生姓名 (如：小明)" class="w-full p-3 rounded-lg border border-emerald-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm text-lg">
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-                    <div class="dimension-card p-4 rounded-xl bg-white">
-                        <label class="block text-sm font-bold text-gray-700 mb-2">1. 學生個性</label>
-                        <select id="personality" class="w-full p-2 rounded border-gray-200 text-sm focus:ring-emerald-500">
-                            <option value="pos">🌟 正向：活潑開朗</option>
-                            <option value="neu">😐 中性：溫和穩定</option>
-                            <option value="imp">🌱 鼓勵：較慢熟內斂</option>
-                        </select>
+            <div class="p-6 md:p-8 space-y-6">
+                <!-- 姓名與快速原型列 -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end bg-slate-50 p-4 rounded-2xl border border-slate-200/80">
+                    <div class="md:col-span-4">
+                        <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">學生姓名</label>
+                        <input type="text" id="studentName" placeholder="輸入姓名 (如：宥廷)" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white font-medium text-base shadow-sm">
                     </div>
-
-                    <div class="dimension-card p-4 rounded-xl bg-white">
-                        <label class="block text-sm font-bold text-gray-700 mb-2">2. 聽講時表現</label>
-                        <select id="lecture" class="w-full p-2 rounded border-gray-200 text-sm focus:ring-emerald-500">
-                            <option value="pos">🌟 正向：專注互動</option>
-                            <option value="neu">😐 中性：安靜聽講</option>
-                            <option value="imp">🌱 鼓勵：需多提醒專注</option>
-                            <option value="warn">⚠️ 提醒：影響進度需改進</option>
-                        </select>
-                    </div>
-
-                    <div class="dimension-card p-4 rounded-xl bg-white">
-                        <label class="block text-sm font-bold text-gray-700 mb-2">3. 課堂實作表現</label>
-                        <select id="handsOn" class="w-full p-2 rounded border-gray-200 text-sm focus:ring-emerald-500">
-                            <option value="pos">🌟 正向：獨立純熟</option>
-                            <option value="neu">😐 中性：按部就班</option>
-                            <option value="imp">🌱 鼓勵：需協助工具使用</option>
-                        </select>
-                    </div>
-
-                    <div class="dimension-card p-4 rounded-xl bg-white">
-                        <label class="block text-sm font-bold text-gray-700 mb-2">4. 自由創作表現</label>
-                        <select id="creative" class="w-full p-2 rounded border-gray-200 text-sm focus:ring-emerald-500">
-                            <option value="pos">🌟 正向：巧思豐富</option>
-                            <option value="neu">😐 中性：完成度高</option>
-                            <option value="imp">🌱 鼓勵：多嘗試自身想法</option>
-                        </select>
-                    </div>
-
-                    <div class="dimension-card p-4 rounded-xl bg-white">
-                        <label class="block text-sm font-bold text-gray-700 mb-2">5. 與同學相處</label>
-                        <select id="social" class="w-full p-2 rounded border-gray-200 text-sm focus:ring-emerald-500">
-                            <option value="pos">🌟 正向：樂於分享</option>
-                            <option value="neu">😐 中性：和睦相處</option>
-                            <option value="imp">🌱 鼓勵：可多參與討論</option>
-                        </select>
-                    </div>
-
-                    <div class="dimension-card p-4 rounded-xl bg-white">
-                        <label class="block text-sm font-bold text-gray-700 mb-2">6. 協助整理環境</label>
-                        <select id="cleanup" class="w-full p-2 rounded border-gray-200 text-sm focus:ring-emerald-500">
-                            <option value="pos">🌟 正向：主動負責</option>
-                            <option value="neu">😐 中性：配合整理</option>
-                            <option value="imp">🌱 鼓勵：需提醒善後</option>
-                        </select>
+                    <div class="md:col-span-8">
+                        <label class="block text-xs font-bold text-slate-600 mb-1.5">⚡ 快速套用學生常見原型（一鍵切換下方選單）</label>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="applyPreset('normal')" class="preset-btn px-3 py-2 text-xs font-bold rounded-xl bg-emerald-100 text-emerald-800 hover:bg-emerald-200 border border-emerald-200">
+                                😐 平穩多數派 (預設安全牌)
+                            </button>
+                            <button onclick="applyPreset('star')" class="preset-btn px-3 py-2 text-xs font-bold rounded-xl bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200">
+                                🌟 模範小創客
+                            </button>
+                            <button onclick="applyPreset('active')" class="preset-btn px-3 py-2 text-xs font-bold rounded-xl bg-blue-50 text-blue-800 hover:bg-blue-100 border border-blue-200">
+                                ⚡ 活潑好動 (聽講需提醒)
+                            </button>
+                            <button onclick="applyPreset('shy')" class="preset-btn px-3 py-2 text-xs font-bold rounded-xl bg-purple-50 text-purple-800 hover:bg-purple-100 border border-purple-200">
+                                🌱 慢熟細心型
+                            </button>
+                            <button onclick="applyPreset('maker')" class="preset-btn px-3 py-2 text-xs font-bold rounded-xl bg-rose-50 text-rose-800 hover:bg-rose-100 border border-rose-200">
+                                🔧 實作強但收尾少根筋
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <button onclick="generateComment()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 px-6 rounded-2xl transition shadow-lg hover:shadow-emerald-200 mb-6 flex items-center justify-center gap-2 text-lg">
-                    ✨ 隨機生成 STEAM 評語
-                </button>
+                <!-- 6 大維度選擇區 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- 1. 個性 -->
+                    <div class="dimension-card p-4 rounded-2xl bg-white">
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="text-sm font-bold text-slate-700">1. 課堂性格與狀態</label>
+                            <span class="text-[11px] px-2 py-0.5 bg-slate-100 text-slate-500 rounded-md font-medium">開頭段</span>
+                        </div>
+                        <select id="personality" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                            <option value="pos">🌟 正向：活潑開朗、充滿好奇</option>
+                            <option value="neu" selected>😐 中性：溫和穩定、踏實有禮</option>
+                            <option value="imp">🌱 鼓勵：慢熟內斂、較為謹慎</option>
+                        </select>
+                    </div>
 
-                <div class="relative group">
-                    <textarea id="result" rows="6" class="w-full p-6 bg-gray-50 border-2 border-dashed border-gray-200 rounded-2xl text-gray-700 leading-loose resize-none focus:outline-none focus:border-emerald-300" placeholder="評語將根據上方選項自動合成..."></textarea>
-                    <button onclick="copyText()" class="absolute bottom-4 right-4 bg-gray-800 text-white font-medium py-2 px-5 rounded-xl hover:bg-black transition shadow-md flex items-center gap-2">
-                        📋 複製並記錄
+                    <!-- 2. 聽講 -->
+                    <div class="dimension-card p-4 rounded-2xl bg-white">
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="text-sm font-bold text-slate-700">2. 原理解說與聽講</label>
+                            <span class="text-[11px] px-2 py-0.5 bg-slate-100 text-slate-500 rounded-md font-medium">開頭段</span>
+                        </div>
+                        <select id="lecture" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                            <option value="pos">🌟 正向：專注投入、積極問答</option>
+                            <option value="neu" selected>😐 中性：安靜聆聽、跟上進度</option>
+                            <option value="imp">🌱 鼓勵：偶爾分心、手摸零件</option>
+                            <option value="warn">⚠️ 提醒：急躁插話、影響秩序</option>
+                        </select>
+                    </div>
+
+                    <!-- 3. 實作 -->
+                    <div class="dimension-card p-4 rounded-2xl bg-white">
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="text-sm font-bold text-slate-700">3. 機構組裝與實作</label>
+                            <span class="text-[11px] px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded-md font-medium">核心段</span>
+                        </div>
+                        <select id="handsOn" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                            <option value="pos">🌟 正向：獨立純熟、懂排查問題</option>
+                            <option value="neu" selected>😐 中性：按部就班、結構穩固</option>
+                            <option value="imp">🌱 鼓勵：操作生疏、遇卡關需引導</option>
+                        </select>
+                    </div>
+
+                    <!-- 4. 創作 -->
+                    <div class="dimension-card p-4 rounded-2xl bg-white">
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="text-sm font-bold text-slate-700">4. 作品完成度與延伸</label>
+                            <span class="text-[11px] px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded-md font-medium">核心段</span>
+                        </div>
+                        <select id="creative" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                            <option value="pos">🌟 正向：巧思豐富、主動改造測試</option>
+                            <option value="neu" selected>😐 中性：中規中矩、功能完整達標</option>
+                            <option value="imp">🌱 鼓勵：依賴範例、鼓勵大膽嘗試</option>
+                            <option value="skip">➖ 略過：本次不特別提及</option>
+                        </select>
+                    </div>
+
+                    <!-- 5. 社交 -->
+                    <div class="dimension-card p-4 rounded-2xl bg-white">
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="text-sm font-bold text-slate-700">5. 同儕互動與合作</label>
+                            <span class="text-[11px] px-2 py-0.5 bg-amber-50 text-amber-600 rounded-md font-medium">結尾段</span>
+                        </div>
+                        <select id="social" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                            <option value="auto" selected>🎲 智慧調配 (與第6項隨機擇一中性)</option>
+                            <option value="pos">🌟 正向：熱心助人、樂於分享交流</option>
+                            <option value="neu">😐 中性：相處融洽、配合小組分工</option>
+                            <option value="imp">🌱 鼓勵：習慣獨自操作、可多交流</option>
+                            <option value="skip">➖ 略過：本次不特別提及</option>
+                        </select>
+                    </div>
+
+                    <!-- 6. 整理 -->
+                    <div class="dimension-card p-4 rounded-2xl bg-white">
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="text-sm font-bold text-slate-700">6. 工具歸位與善後</label>
+                            <span class="text-[11px] px-2 py-0.5 bg-amber-50 text-amber-600 rounded-md font-medium">結尾段</span>
+                        </div>
+                        <select id="cleanup" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                            <option value="auto" selected>🎲 智慧調配 (與第5項隨機擇一中性)</option>
+                            <option value="pos">🌟 正向：主動負責、分類迅速確實</option>
+                            <option value="neu">😐 中性：配合規定、收妥個人區域</option>
+                            <option value="imp">🌱 鼓勵：偶爾遺漏零件、需提醒收納</option>
+                            <option value="skip">➖ 略過：本次不特別提及</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 生成按鈕與結語開關 -->
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                    <button onclick="generateComment()" class="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold py-4 px-6 rounded-2xl transition shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 text-lg active:scale-[0.99]">
+                        ✨ 智慧合成自然評語（自動避開同班重複句）
                     </button>
+                    <label class="flex items-center justify-center gap-2 px-4 py-3 bg-slate-100 hover:bg-slate-200/70 rounded-2xl cursor-pointer select-none text-sm font-medium text-slate-700 border border-slate-200">
+                        <input type="checkbox" id="addClosing" checked class="w-4 h-4 accent-emerald-600 rounded">
+                        <span>加上溫馨期許結尾句</span>
+                    </label>
+                </div>
+
+                <!-- 結果顯示與編輯區 -->
+                <div class="relative">
+                    <div class="flex justify-between items-center mb-2 px-1">
+                        <span class="text-xs font-bold text-slate-500">📝 生成結果預覽（可直接點擊框內微調文字）</span>
+                        <span id="charCountBadge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">字數：0 字</span>
+                    </div>
+                    <textarea id="result" oninput="updateCharCount()" rows="5" class="w-full p-5 pb-16 bg-slate-50 border-2 border-dashed border-slate-300 rounded-2xl text-slate-800 leading-relaxed resize-none focus:outline-none focus:border-emerald-500 focus:bg-white transition text-base" placeholder="點擊上方「智慧合成自然評語」按鈕後，評語將顯示於此..."></textarea>
+                    
+                    <div class="absolute bottom-3.5 right-3.5 flex items-center gap-2">
+                        <button onclick="generateComment()" title="不滿意這組造句？點此換一批句子" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-medium py-2 px-3.5 rounded-xl transition shadow-sm text-sm flex items-center gap-1">
+                            🔄 換一句試試
+                        </button>
+                        <button id="copyBtn" onclick="copyText()" class="bg-slate-800 hover:bg-black text-white font-bold py-2 px-5 rounded-xl transition shadow-md flex items-center gap-1.5 text-sm">
+                            📋 複製並存入下方紀錄
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100">
-            <div class="bg-gray-100 py-3 px-6 border-b border-gray-200 flex justify-between items-center">
-                <h2 class="text-gray-700 font-bold flex items-center gap-2">
-                    📝 學生評語暫存記錄
-                </h2>
-                <span class="text-xs text-gray-500 bg-white px-2 py-1 rounded-full border border-gray-200">同名會自動覆蓋</span>
+        <!-- 歷史暫存記錄區 -->
+        <div class="bg-white rounded-3xl shadow-lg overflow-hidden border border-slate-100">
+            <div class="bg-slate-100/80 py-3.5 px-6 border-b border-slate-200 flex flex-wrap justify-between items-center gap-2">
+                <div class="flex items-center gap-2">
+                    <h2 class="text-slate-700 font-bold">📚 本班已生成評語暫存區</h2>
+                    <span id="recordCount" class="text-xs font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">0 位學生</span>
+                    <span class="text-xs text-slate-400 hidden sm:inline">（自動儲存於瀏覽器，重整網頁不會消失）</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="copyAllHistory()" class="text-xs font-bold bg-white hover:bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-lg transition shadow-sm">
+                        📥 一鍵複製全班總表
+                    </button>
+                    <button onclick="clearHistory()" class="text-xs font-medium bg-white hover:bg-rose-50 text-rose-600 border border-slate-200 px-3 py-1.5 rounded-lg transition">
+                        🗑️ 清空紀錄
+                    </button>
+                </div>
             </div>
             <div class="p-6">
-                <div id="historyContainer" class="space-y-3 max-h-60 overflow-y-auto pr-2">
-                    <p class="text-gray-400 text-sm text-center py-4" id="emptyMsg">尚未有任何記錄，按下「複製並記錄」後會顯示在這裡。</p>
+                <div id="historyContainer" class="space-y-3 max-h-80 overflow-y-auto pr-1">
+                    <p class="text-slate-400 text-sm text-center py-6" id="emptyMsg">尚未有任何記錄，按下「複製並存入下方紀錄」後會自動保存在這裡。</p>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // 每個維度、每個等級擴充至 10 句 (新增 warn 子向度為 5 句)
+        /**
+         * 1. 深度擴充語料庫 (每個子句皆不包含句尾句號，且開頭不強制綁定名字，由主詞與標點引擎統一調度)
+         * 標記 {name} 代表可由引擎決定是否替換為名字或代名詞
+         */
         const commentDb = {
+            // 第一維度：課堂性格與學習狀態 (放在整段評語最開頭，必定帶出學生姓名)
             personality: {
                 pos: [
-                    "充滿活力的孩子，總是能為班上帶來熱情的氣氛。", 
-                    "很欣賞${name}開朗的性格，面對新的課程內容總是躍躍欲試。", 
-                    "${name}具備極佳的正向特質，學習時充滿朝氣，令人印象深刻。", 
-                    "在課堂中，${name}展現了積極主動的態度，是個很棒的小創客。", 
-                    "${name}總是帶著笑容參與課程，展現出高度的學習熱忱。",
-                    "${name}展現出高度的學習熱忱，積極的態度也能帶動周遭同學。",
-                    "欣賞${name}真誠率直的個性，面對實作挑戰時總能勇於嘗試。",
-                    "性格活潑大方，常能帶動小組討論，讓課堂氣氛更加熱絡。",
-                    "充滿好奇心與探索精神，這是進行科學實作的優秀特質。",
-                    "能迅速融入課堂活動，展現出的自信與朝氣值得肯定。"
+                    "{name}是個充滿活力與好奇心的孩子，每次進到教室總是帶著滿滿的熱情",
+                    "很欣賞{name}開朗大方的特質，面對全新的科學實作主題總是躍躍欲試",
+                    "{name}在課堂上總是展現出高度的學習熱忱，積極正向的態度常能感染周遭同學",
+                    "{name}具備極佳的探索精神，面對未知的科學現象總是充滿求知慾與朝氣",
+                    "在這個月的課程中，{name}展現了主動積極的創客精神，面對挑戰總是充滿自信",
+                    "{name}總是帶著愉快的心情參與課程，對各類動手做的實驗與機構都抱持濃厚興趣",
+                    "很喜歡{name}真誠率直且勇於嘗試的性格，在課堂互動中總是展現滿滿的活力",
+                    "{name}融入課堂的節奏非常快，每次面對新的實作任務都能展現出積極投入的姿態",
+                    "{name}對生活周遭的科學應用充滿好奇，上課時總是神采奕奕、十分投入",
+                    "{name}有著陽光般的正向態度，即使遇到比較複雜的課堂任務也總是樂在其中",
+                    "{name}在班上是個充滿朝氣的小創客，對於沒接觸過的工具與材料總是充滿探索熱情",
+                    "非常肯定{name}積極主動的學習面貌，每次上課都能感受到他對科學實作的期待"
                 ],
                 neu: [
-                    "${name}在班級中表現穩定，性格溫和且總是很有禮貌。", 
-                    "${name}是個安靜且懂事的孩子，學習過程非常平穩踏實。", 
-                    "情緒穩定，能用心參與每堂課，學習態度值得肯定。", 
-                    "很欣賞${name}穩重不浮躁的特質，能靜下心來面對挑戰。", 
-                    "處事態度溫和，在課堂上總能保持認真學習的精神。",
-                    "個性內斂穩重，能確實完成老師交代的各項任務。",
-                    "表現成熟穩重，能冷靜地面對學習中遇到的各種狀況。",
-                    "待人謙和有禮，做事踏實，是個可靠的小組夥伴。",
-                    "具備踏實的性格，在實作過程中總能按部就班地完成。",
-                    "展現出良好的沉穩度，且具備優秀的自我管理能力。"
+                    "{name}在班級中的表現相當穩定，性格溫和有禮，學習步調總是平穩踏實",
+                    "{name}是個安靜且懂事的孩子，在這個月的課程中展現了非常沉穩的學習態度",
+                    "很欣賞{name}穩重不浮躁的特質，每次上課都能靜下心來一步步跟上課程節奏",
+                    "{name}在課堂上的情緒與狀態都很穩定，是個能讓人放心的踏實學習者",
+                    "{name}待人謙和有禮，上課時的作風相當務實，能確實配合老師的各項教學引導",
+                    "在近期的課程裡，{name}始終維持著平穩認真的學習狀態，態度相當端正",
+                    "{name}具備良好的自我管理能力，在課堂中不疾不徐、表現得相當成熟穩重",
+                    "{name}是個做事踏實、配合度高的孩子，能以穩健的步調參與每一次的科學活動",
+                    "{name}在班上總是安安靜靜地做好自己的本分，展現出沉著冷靜的學習氣質",
+                    "觀察{name}這陣子的上課狀態，整體表現四平八穩，面對各項任務都很有耐心",
+                    "{name}的個性溫和內斂，在課堂上不吵不鬧，能穩定地投入在自己的學習節奏中",
+                    "{name}上課時的態度認真且守規矩，是個行事低調但非常可靠的學生",
+                    "{name}在課堂中總是保持著平和穩定的心情，能踏實地完成老師交付的每一個環節",
+                    "{name}有著沉穩耐心的好脾氣，在需要花時間慢慢操作的科學課堂中表現得十分安定"
                 ],
                 imp: [
-                    "在課堂上較為內斂，鼓勵${name}多表達自己的想法，建立自信。", 
-                    "做事細心，若未來能更積極參與課堂互動，學習收穫會更豐富。", 
-                    "性格較為慢熟，但在適應課程節奏後，表現有明顯進步。", 
-                    "期待${name}未來能更大方地展現學習成果，發揮自身的潛力。", 
-                    "鼓勵${name}在課堂中多主動提問與參與，從中獲得更多學習樂趣。",
-                    "${name}具備獨特的想法，建議在小組討論時多主動發言，與大家交流。",
-                    "面對新事物時較需時間適應，鼓勵${name}勇於嘗試，累積實作經驗。",
-                    "具備細膩的觀察力，期待未來能展現更多對科學實作的自信。",
-                    "能以自己的步調穩健學習，若能適時增加與同學的互動會更棒。",
-                    "鼓勵${name}放下對犯錯的擔憂，在課堂上更大膽地進行科學嘗試。"
+                    "{name}的個性較為內斂慢熟，在課堂上習慣先安靜觀察周遭的環境與變化",
+                    "{name}是個心思細膩但稍微害羞的孩子，面對新的課程任務時會比較謹慎小心",
+                    "{name}在班上較為安靜低調，雖然不常主動表現自己，但其實都在默默觀察學習",
+                    "{name}面對陌生的實作主題時需要一點暖身時間，熟悉節奏後便能安心投入",
+                    "{name}的行事風格較為保守謹慎，習慣在確認自己完全理解後才踏出下一步",
+                    "{name}在團體中屬於比較害羞慢熱的類型，鼓勵未來可以試著多展現自己的想法",
+                    "{name}做事細心但有時對自己比較沒把握，需要多一點鼓勵來建立課堂上的自信心",
+                    "{name}在課堂上比較少主動開口，不過在逐漸適應環境後，神情已比剛開始放鬆許多",
+                    "{name}是個溫和內向的孩子，習慣以自己比較熟悉、安全的步調來進行學習",
+                    "{name}有時候會因為擔心做錯而顯得比較猶豫，其實只要放開來嘗試就會發現自己做得到"
                 ]
             },
+
+            // 第二維度：原理解說與聽講表現
             lecture: {
                 pos: [
-                    "聽講時十分專注，對於課程中的科學原理展現出高度興趣。", 
-                    "非常專心聽講，而且能精準回答老師提出的科學概念。", 
-                    "求知慾很強，課堂中常常主動發問，想要深入了解背後的原理。", 
-                    "能有效吸收課堂知識，並主動針對科學現象提出個人見解。", 
-                    "課堂專注力佳，能確實掌握老師講解的步驟與節奏。",
-                    "聽講時保持高度專注，能仔細聆聽並記錄重要的科學細節。",
-                    "${name}的理解力極佳，總能在老師講解完畢後，迅速抓到課程的核心重點。",
-                    "在課堂上經常積極舉手發言，展現出強烈的求知慾。",
-                    "聽講態度認真，且能適時給予回應，與講者有良好的互動。",
-                    "能將老師提到的新知識與過去的經驗連結，在聽講時展現出極高的敏銳度。"
+                    "在科學原理解說的環節十分專注，能精準抓到老師講解的核心觀念",
+                    "聽講時眼神專注，不僅能快速吸收理論重點，還能針對實驗現象主動提出見解",
+                    "對於作品背後的科學機制展現出濃厚興趣，在問答互動時總能給予很棒的回饋",
+                    "講解步驟與原理時聽得非常仔細，常能將課堂新知與生活經驗做連結",
+                    "在理論說明階段表現出極佳的敏銳度，面對老師的提問都能舉一反三、清楚回答",
+                    "聽課時的專注力很高，能確實掌握每一個關鍵的操作細節與背後的物理化學邏輯",
+                    "在課堂討論時相當踴躍，不僅能聽懂抽象的科學概念，也很樂意舉手分享自己的推論",
+                    "面對老師拋出的思考題總能積極動腦，展現出很好的邏輯理解與知識吸收力",
+                    "在講解示範時總是目不轉睛，能把重要的組裝邏輯與安全守則都牢牢記在心裡",
+                    "理解力相當出色，往往在老師示範完畢後就能立刻掌握本次實驗的運作關鍵"
                 ],
                 neu: [
-                    "能安靜且穩定地聽完科學原理解說，並了解本堂課的重點。", 
-                    "上課態度認真，能順利跟上課程進度並理解基本觀念。", 
-                    "聽講時很守秩序，是一位能認真吸收知識的學習者。", 
-                    "對於課堂講解的內容都有很好的理解，表現得四平八穩。", 
-                    "能跟隨老師的引導進行思考，學習狀態平穩。",
-                    "聽講時能保持安靜，遵守課堂發言規則。",
-                    "雖然較少主動發言，但聽講時神情專注，能確實吸收知識。",
-                    "聽講姿勢端正，能平心靜氣地聆聽科學原理解說。",
-                    "面對老師的提問能給予正確回應，顯示有確實專注於課堂。",
-                    "聽講態度中規中矩，能順利達成老師對課堂秩序的要求。"
+                    "在原理解說與步驟示範時能安靜聆聽，順利理解本堂課的核心觀念",
+                    "聽講時的態度中規中矩，能跟著老師的引導進行思考並掌握基本操作流程",
+                    "雖然課堂上較少主動舉手發問，但聽講時神情專注，能確實把重點聽進去",
+                    "在講解階段能遵守課堂秩序，安穩地把科學原理與接下來的製作步驟聽完",
+                    "面對課堂上的觀念講解都能平心靜氣地吸收，遇到老師點名提問時也能給出正確回應",
+                    "聽課狀態相當平穩，能配合老師的節奏看懂黑板或投影片上的機構與原理說明",
+                    "在理論與示範環節表現得很守規矩，能靜下心來把注意事項聽清楚才開始動作",
+                    "能穩定地跟上老師的講課步調，對於作品為什麼能運作的基本原理都有確實理解",
+                    "在聽講時能保持良好的坐姿與專注度，默默地將待會要操作的重點消化吸收",
+                    "講解過程中不會隨意分心打岔，是一位能安靜接收知識並乖巧配合引導的學習者",
+                    "對於老師強調的操作眉角與科學概念都有認真聽進去，基礎觀念掌握得頗為紮實",
+                    "在示範環節能定下心來觀看操作流程，確保自己待會動手做時不會偏離方向",
+                    "聽講表現四平八穩，能順利理解課程中介紹的科學名詞與基本的機構運作邏輯",
+                    "在課堂前半段的原理介紹時段表現安分，能跟著全班的步調一起完成觀念建立"
                 ],
                 imp: [
-                    "偶爾容易被周遭事物吸引，但在提醒後能迅速將注意力拉回課堂。", 
-                    "聆聽理論解說時較易分心，但在實作環節能重新展現專注力。", 
-                    "建議${name}在聽講時可嘗試做些簡單的筆記，幫助自己維持專注。", 
-                    "建議聽講時多參與老師的問答互動，有助於提升學習吸收率。", 
-                    "偶爾注意力會短暫分散，若能提升專注力，對理論的理解會更透徹。",
-                    "提醒${name}多將注意力放在步驟講解上，這能幫助後續的實作更加順利。",
-                    "聽講時有時會陷入自我思考，期待${name}能漸漸拉長專注於講者的時間。",
-                    "聽講時偶爾會因把玩手邊零件而分心，建議先淨空桌面以提升專注度。",
-                    "理解能力不錯，若能提升聽講時的專注度，將能掌握更多科學細節。",
-                    "聽講時建議將視線專注於黑板或講者，這能幫助自己更有效率地集中精神。"
+                    "在靜態的原理解說階段偶爾會被周遭事物吸引，經老師輕聲提醒後能將視線拉回前方",
+                    "聽講時有時候會忍不住先去把玩手邊的材料包，建議講解時先將雙手放空會更專注",
+                    "面對比較抽象的理論說明時注意力偶爾會短暫飄走，但進入實作示範時又能重新聚焦",
+                    "聽課時偶爾會陷入自己的思緒或發呆，若能多參與問答互動，對原理的印象會更深刻",
+                    "在講解步驟時有時會因為急著想動手而漏聽細節，提醒要先聽完關鍵提示再開始操作",
+                    "靜態聽講的耐性還有進步空間，偶爾需要老師幫忙把注意力拉回黑板上的重點說明",
+                    "在認識科學原理的環節稍微容易分心，建議可以試著跟著複誦重點來維持專注度",
+                    "有時候會被桌上的工具零件吸引而錯過口頭提示，若能養成先聽完再碰材料的習慣會更棒",
+                    "在理論講解時段精神比較容易鬆懈，鼓勵多給自己一點專注目標，後續實作會更順暢",
+                    "偶爾在聽講時會與鄰座同學有小眼神交流而分心，提醒後都能立刻恢復端正的聽課狀態"
                 ],
                 warn: [
-                    "上課時偶爾會因過於興奮而影響班級秩序，需學習控制發言時機與音量。",
-                    "聽講時較為急躁，偶爾會打斷課程進行，需學習耐心等待與尊重講者。",
-                    "課堂中需減少與鄰座同學的閒聊嬉鬧，以免影響自身學習與整體進度。",
-                    "雖然參與度高，但在不恰當的時機過度發言已影響課程節奏，需加以改進。",
-                    "實作前需靜下心來聽完完整步驟講解，這是重要的課堂規範，請務必遵守。"
+                    "上課時偶爾會因為太過興奮而急著插話，需要學習控制發言的時機與音量，尊重講者與同學",
+                    "在講解階段有時會按捺不住性子與旁邊同學閒聊嬉鬧，需多留意課堂秩序以免漏聽重要步驟",
+                    "雖然對課程很有反應，但在不恰當的時機大聲發言容易打斷教學節奏，這部分需要特別調整",
+                    "實作前務必先靜下心來聽完完整的安全守則與步驟說明，避免還沒聽完就自己搶先動手操作",
+                    "聽講時比較容易躁動或離開座位，需要多加練習定下心來，才不會影響自身與班級的學習進度"
                 ]
             },
+
+            // 第三維度：機構組裝與課堂實作 (極度強化微觀動作描寫)
             handsOn: {
                 pos: [
-                    "實作時工具使用非常純熟，能獨立且精確地完成作品組裝。", 
-                    "動手能力極佳，能獨立將科學原理確實應用在作品上。", 
-                    "在操作工具時展現了細心與耐心，每一個步驟都毫不馬虎。", 
-                    "實作時步驟清晰、條理分明，展現出優秀的創客素養。", 
-                    "能將設計概念順利轉化為實際成品，手眼協調與實作能力值得肯定。",
-                    "實作時總是充滿自信，對於各種材料的特性掌握得恰到好處，表現極佳。",
-                    "手部精細動作發展良好，在處理微小零件時展現出極高的穩定度。",
-                    "遇到組裝難題時不僅不氣餒，還能冷靜分析並找出解決之道，展現創客精神。",
-                    "操作機具或工具時不僅熟練，更懂得將安全守則牢記在心，是大家的表率。",
-                    "實作效率高，總能有條理且高品質地達成每次的課堂任務。"
+                    "手部精細動作與工具掌握度極佳，在處理微小零件與結構固定時展現出高度穩定性",
+                    "動手實作的能力非常出色，能看懂步驟邏輯並獨立且精準地將各個機構組裝到位",
+                    "在組裝過程中條理分明，遇到零件公差或機構卡住時，能冷靜觀察並自行微調排除問題",
+                    "操作各項工具的手勢純熟且謹慎，不僅組裝效率高，對於安全規範的執行也毫不馬虎",
+                    "能將剛學到的科學原理靈活運用在實作中，從材料比對、孔位固定到最終測試都一氣呵成",
+                    "面對步驟較繁複的機構組裝毫不怯場，展現出極佳的空間感與手眼協調能力",
+                    "在實作環節總是充滿自信，懂得先核對零件規格再動手，作品的組裝精準度非常高",
+                    "遇到線路或機構連動不順的狀況時，具備優秀的除錯耐心，能一步步找出問題點並修正",
+                    "操作器材時既細心又有條理，能把每一個接合處與活動關節都調整到最順暢的狀態",
+                    "實作時展現出很棒的創客素養，不只能獨立完成高難度步驟，還能確保結構的耐用與扎實"
                 ],
                 neu: [
-                    "能按部就班地跟著步驟進行，循序漸進地完成自己的實作作品。", 
-                    "具備不錯的基本實作能力，能穩穩地將零件組裝到位。", 
-                    "在老師的引導下，都能順利且平穩地完成每一次的課堂任務。", 
-                    "操作工具時很守規矩，能確實完成基本的組裝要求。", 
-                    "實作過程很踏實，一步一步把作品完成，非常有耐心。",
-                    "在實作過程中表現穩定，能謹慎地對待每一項工具與材料。",
-                    "${name}會仔細核對老師發下的步驟說明，確保自己沒有遺漏任何組裝細節。",
-                    "實作速度雖然不算最快，但每一步都做得非常紮實，成品結構穩固。",
-                    "能夠在規定的時間內完成當天的實作進度，表現達標且態度認真。",
-                    "不會隨意變更標準流程，按部就班地完成任務，是個穩紮穩打的實作者。"
+                    "能按部就班地對照步驟說明，一步一步穩健地將手邊的零件組裝到位",
+                    "實作速度雖然不算班上最快，但每個卡榫與固定細節都處理得很紮實，成品結構相當穩固",
+                    "在操作工具與組裝材料時態度謹慎，不會隨意跳過步驟，是個穩紮穩打的實作者",
+                    "面對稍微複雜的組裝環節，能先仔細觀察老師的示範，再耐心地把零件對準接合",
+                    "在老師的階段性引導下，都能在規定時間內順利跟上進度，平穩地完成當天的實作任務",
+                    "動手做時很有耐心，會仔細核對材料包裡的零件位置，確保沒有遺漏任何組裝環節",
+                    "操作基本工具時相當守規矩，能按照標準流程一步步把作品的主體結構建立起來",
+                    "在組裝過程中表現得相當踏實，遇到需要微調對齊的地方也能靜下心來慢慢處理好",
+                    "具備穩定且達標的基礎動手能力，能把零件安穩地固定在正確位置，讓作品順利運作",
+                    "實作時的步調平穩有序，不會因為心急而把材料弄壞，能妥善地完成每一次的組裝要求",
+                    "在測試機構與組裝零件時態度認真，會乖巧地照著老師提示的手勢與技巧來完成操作",
+                    "面對需要花時間重複固定的步驟展現出不錯的耐性，能一步一腳印地把作品組裝完整",
+                    "能夠確實掌握課堂教的基本工具用法，安安穩穩地隨著課程節奏把零組件結合成型",
+                    "在實作階段表現得中規中矩，從清點材料、逐步組裝到最後的基礎測試都能順利達標",
+                    "遇到不太確定的組裝方向時，會先停下來比對範例或詢問老師，確認無誤後再穩健地完成"
                 ],
                 imp: [
-                    "操作新工具時較為生疏，鼓勵多加練習，熟悉後會更加順手。", 
-                    "遇到實作困難時習慣依賴協助，鼓勵${name}先嘗試自行找尋解決方案。", 
-                    "組裝過程中偶遇挫折，需引導其逐步克服，以培養獨立實作的能力。", 
-                    "目前在實作步驟上較需從旁引導，期待未來能提升獨立操作的自信。", 
-                    "使用工具的力道與技巧尚在摸索中，鼓勵保持耐心持續練習。",
-                    "建議實作時放慢速度，確認步驟後再行動，可減少重複拆裝的機率。",
-                    "遇到較難組裝的零件時容易氣餒，鼓勵多變換角度嘗試，培養解決問題的毅力。",
-                    "偶爾會搞混零件的使用順序，建議實作前先做好材料分類。",
-                    "建議動手前先在腦海中模擬一遍流程，這能讓實作過程更加順暢。",
-                    "面對複雜的工具操作較缺乏自信，需多給予練習時間以建立操作熟練度。"
+                    "面對較精細的零件組裝或新工具時手部動作略顯生疏，多給予幾次練習後已逐漸抓到訣竅",
+                    "在機構對齊或零件固定時偶爾會因為施力角度不對而卡關，在老師從旁引導手勢後便能順利完成",
+                    "遇到組裝不順時比較容易緊張或直接舉手求救，鼓勵可以先試著轉個方向或比對範例自己排查",
+                    "有時會因為心急而搞混零件的安裝先後順序，建議動手前先將桌面材料分類排好，能減少拆裝重來的次數",
+                    "對於工具的施力力道還在摸索階段，有時固定得不夠緊實，需要老師協助做最後的結構補強",
+                    "面對步驟較多的實作任務時偶爾會不知從何下手，透過拆解成小目標引導後，也能一步步跟上完成",
+                    "在處理細小零件或卡榫接合時比較容易感到挫折，我們正持續鼓勵他放慢速度、累積手部操作的自信",
+                    "組裝過程中偶爾會漏看小細節而裝反方向，提醒養成每做完一步就先測試一下機構順暢度的好習慣",
+                    "獨立操作工具的熟練度還有成長空間，目前在關鍵步驟仍需老師稍微扶一把，但願意持續嘗試值得肯定",
+                    "當作品測試不如預期時容易先停下來等待協助，未來可多練習觀察是哪個關節或零件卡住，培養除錯毅力"
                 ]
             },
+
+            // 第四維度：作品完成度與延伸創作
             creative: {
                 pos: [
-                    "在自由創作時間總能發揮豐富的想像力，讓作品充滿獨特的個人風格。", 
-                    "不侷限於老師的範例，能巧妙地將學到的科學原理與自己的創意結合。", 
-                    "作品的構思非常特別，常常能在細節中發現${name}充滿巧思的設計。", 
-                    "具備舉一反三的能力，總能為作品擴充出實用且創新的功能。", 
-                    "充滿創意潛能，每次的實作成品總能展現出別出心裁的設計。",
-                    "創作思維不落俗套，作品中常蘊含許多令人驚喜的巧思。",
-                    "不僅具備天馬行空的想像力，更有將其實體化的優秀能力，非常難得。",
-                    "在美化作品時展現出良好的視覺美感，有效提升了科學成品的質感。",
-                    "面對開放式主題，總能提出獨樹一格的設計見解，創造力十足。",
-                    "具備不斷嘗試新解法的實驗精神，讓作品展現出豐富的多樣性。"
+                    "在作品測試與延伸調整階段，總能發揮巧思，為機構或外觀加入別出心裁的個人設計",
+                    "不滿足於只做出基本款，完成主體後還會主動嘗試調整參數或結構，探索能不能讓效果更好",
+                    "具備很棒的實驗與改造精神，常能把學到的科學原理轉化為獨特的創意玩法，令人驚喜",
+                    "在自由發揮與裝飾調整的環節很有想法，兼顧了作品的視覺美感與機構運作的流暢度",
+                    "完成基本組裝後，總能主動思考「如果改變某個零件會怎樣」，展現出難得的科學探究潛力",
+                    "作品總是充滿個人特色，能巧妙地利用手邊現有的材料進行加固或美化，完成度極高",
+                    "面對開放式的調整時間，能大膽將腦中的構想付諸實行，讓最終成品既實用又富趣味性",
+                    "在微調作品性能時展現出豐富的想像力與執行力，常能發現與眾不同的操作技巧"
                 ],
                 neu: [
-                    "作品結構非常完整，能確實地把今天學到的原理應用在成品中。", 
-                    "能參考老師的範例，並加入一點自己的小變化，完成度令人滿意。", 
-                    "穩健地完成創作，作品在美觀與功能性上都有達到預期水準。", 
-                    "創作內容符合邏輯，順利呈現了課堂所學，表現得很不錯。", 
-                    "創作過程十分用心，成品的細節處理得很精緻。",
-                    "能夠在老師給定的框架內，安穩地完成屬於自己的創作任務。",
-                    "${name}的作品風格簡約實用，雖然沒有太多華麗裝飾，但功能性十分完整。",
-                    "在自由發揮時，能適當地加入幾項自己喜歡的元素，讓作品增添了一點個人色彩。",
-                    "創作過程按部就班，能夠順利將腦中的基礎構想轉化為實際的成品。",
-                    "作品呈現出中規中矩的美感，能符合本次課程的創作目標與要求。"
+                    "最終完成的作品結構完整且功能正常，能確實呈現出本堂課所要探討的科學現象",
+                    "作品走的是簡約實用的路線，雖然沒有過多花俏的裝飾，但核心機構都能穩定且順暢地運作",
+                    "能參考老師的範例架構，安穩地完成所有必要的組裝與測試，作品的整體完成度相當不錯",
+                    "在延伸調整與外觀整理上表現得中規中矩，成品在功能性與穩固度上都有達到課程預期標準",
+                    "能將課堂所學的原理確實落實在成品上，帶回家的作品結構端正、運作效果也很穩定",
+                    "在最後的成品調校階段態度用心，會確保作品的基本功能可以順利啟動，達成學習目標",
+                    "創作風格偏向務實穩健，能在老師給定的框架下，加入一點自己喜歡的色彩或小細節變化",
+                    "每次都能順利產出功能完整的科學作品，在機構作動與基礎外觀上都維持著穩定的品質",
+                    "完成作品後的測試環節表現平穩，能照著引導一步步確認成品的各項功能皆運作無誤",
+                    "成品的細節收尾處理得乾乾淨淨，能忠實還原課程設計的科學機構，完成度令人滿意",
+                    "在自由調整時間能把自己的作品檢查並加固妥當，確保最終成品能夠正常操作與把玩",
+                    "作品呈現出四平八穩的完成度，能順利達成每次課堂設定的實作挑戰與功能要求"
                 ],
                 imp: [
-                    "目前創作較傾向模仿範例，鼓勵未來能大膽融入更多個人原創想法。", 
-                    "自由發揮時較容易猶豫，建議多相信自己的設計直覺，勇於嘗試。", 
-                    "尚在摸索個人的創作風格，鼓勵放寬心胸去設計，展現自我特色。", 
-                    "創作時偶爾缺乏自信，建議平時多觀察生活周遭，以激發設計靈感。", 
-                    "作品目前的變化較少，鼓勵跨出第一步進行不同材質或結構的嘗試。",
-                    "創作時易受他人意見影響，鼓勵${name}更堅定地實踐自己的設計構想。",
-                    "若能在作品的外觀裝飾上多投入一些時間，成品的視覺效果會更加完整。",
-                    "討論時常有不錯的點子，鼓勵將這些構想實際應用於最終作品中。",
-                    "創作風格較為保守，期待未來能跳脫既有框架，挑戰不同的設計型態。",
-                    "遇到創作瓶頸時容易停滯，建議適時參考文獻或與同儕討論以尋求突破。"
+                    "目前在自由調整與外觀設計上較傾向完全複製老師的範例，鼓勵未來可以大膽加入一點個人色彩",
+                    "完成基礎組裝後對於如何延伸改造比較容易猶豫，建議多相信自己的直覺，放手去試試看不同的調整",
+                    "在開放式創作環節有時會因為怕把作品弄壞而不敢微調，其實多方嘗試正是科學實驗最有趣的地方",
+                    "作品的基本功能都能達成，若在最後的細節修飾與美化上能再多投入一點耐心，成品會更加精緻",
+                    "在構思如何改造作品時想法比較保守，期待未來能慢慢跳脫標準答案的框架，享受自由設計的樂趣",
+                    "有時候心裡有不錯的改造點子，但實際動手時比較缺乏自信，我們會持續鼓勵他勇敢把想法做出來",
+                    "完成主體機構後容易覺得任務已經結束，鼓勵可以利用剩餘時間多測試不同操作條件下的變化"
                 ]
             },
+
+            // 第五維度：同儕互動與小組合作
             social: {
                 pos: [
-                    "很樂於擔任小幫手，不僅自己做得好，還會熱心指導身邊遇到困難的同學。", 
-                    "在團隊中樂於分享材料與想法，能帶動積極正向的討論氣氛。", 
-                    "是個極具團隊精神的夥伴，能積極與同學合作完成各項挑戰。", 
-                    "溝通能力佳，遇到問題時能理性地與同學討論並找出解決方案。", 
-                    "具備同理心，當同學遇到實作困難時，總能適時伸出援手。",
-                    "具備領導特質，能有效協調小組內的意見分歧，凝聚團隊共識。",
-                    "懂得欣賞他人的優點，能適時給予同儕正向的反饋與肯定。",
-                    "在分工合作時，總能主動承擔較困難的任務，展現了極佳的責任感與團隊精神。",
-                    "包容力佳，面對同學的操作失誤能溫和地給予建議，不引發衝突。",
-                    "樂於分享個人實作心得，是同儕遇到困難時極佳的請益對象。"
+                    "在班上是個熱心的小幫手，自己提前完成步驟時，常會主動去關心並協助身邊卡關的同學",
+                    "在團隊與同儕互動中表現大方，樂於和鄰座同學分享共用工具與自己的實作小訣竅",
+                    "具備很好的同理心與合作精神，進行小組測試或競賽活動時，總能帶動正向熱絡的氣氛",
+                    "與同學交流時態度友善且懂得傾聽，遇到共用材料分配或合作任務時都能展現出大器與禮讓",
+                    "不僅自己的作品顧得好，當同學遇到機構組裝問題時，也很樂意一起幫忙觀察、討論解法"
                 ],
                 neu: [
-                    "能與同學和睦相處，在課堂中維持著良好、友善的互動關係。", 
-                    "小組配合度高，能穩定地給予團隊實質的支持與協助。", 
-                    "性格合群，與同學互動自然融洽，能維持良好的同儕關係。", 
-                    "在座位上能專注自身任務，並能友善地回應同學的提問。", 
-                    "與同儕間的相處平穩愉快，能一起營造良好的學習氛圍。",
-                    "在小組討論時能安靜聆聽他人的意見，不會強勢地堅持己見。",
-                    "${name}在班上擁有穩定的人際關係，能跟周遭的同學保持友好的距離。",
-                    "雖然不常主動發起互動，但在需要配合團隊時，總能盡好自己的本分。",
-                    "與同學相處平易近人，情緒穩定，是個容易合作的夥伴。",
-                    "能遵守小組分工規範，確實完成自身負責的項目。"
+                    "在課堂上與周遭同學相處得自然融洽，共用桌上的工具與材料時也能彼此禮讓配合",
+                    "在團體中合群好相處，能維持友善的同儕互動，同時也不會因為聊天而耽誤手邊的進度",
+                    "需要小組配合或輪流使用設備時，都能安靜守秩序地等待與協作，是個好相處的課堂夥伴",
+                    "在座位上主要專注於自己的作品，當鄰座同學有互動或借用工具時，也能給予友善有禮的回應",
+                    "與班上同學維持著平穩和睦的關係，能一起在教室裡營造出安定、舒服的學習氛圍",
+                    "在課堂互動中情緒穩定、平易近人，遇到需要分組或互相幫忙的環節都能順利配合團隊",
+                    "雖然不常主動找同學串門子，但在同桌共學時能保持良好的界線與禮貌，相處起來非常融洽",
+                    "能夠遵守教室裡的團隊規範，在共用器材與討論互動時都表現得相當合群且守秩序"
                 ],
                 imp: [
-                    "目前較習慣獨自專注於作品，鼓勵多與身邊同學交流實作心得。", 
-                    "對自身想法較為堅持，建議學習聆聽他人的建議，體會團隊合作的價值。", 
-                    "在作品分享環節較為害羞，鼓勵未來能更自信地向大家介紹創作理念。", 
-                    "尚在學習如何以委婉的方式進行溝通，這將是提升人際關係的好機會。", 
-                    "有時因過度投入實作而忽略周遭，提醒適時與同學進行互動討論。",
-                    "小組合作時容易一肩扛起所有工作，學習信任隊友並進行分工是未來的目標。",
-                    "表達意見時若能注意語氣的修飾，將有助於同儕間的溝通與理解。",
-                    "偶爾會與同學發生意見摩擦，建議學習冷靜應對，培養互相包容的心。",
-                    "團隊合作中，建議多給予同伴發揮的空間，共同體驗合作達標的成就感。",
-                    "鼓勵${name}更主動地參與跨組討論，以拓展在科學課堂中的學習視野。"
+                    "在課堂上習慣獨自埋頭專注於手邊的作品，鼓勵未來可以多和身邊同學交流彼此的實作發現",
+                    "與同學討論或共用工具時偶爾比較堅持己見，學習用更溫和委婉的方式溝通會讓合作更愉快",
+                    "在成果展示與同儕交流環節比較害羞被動，期待未來能更有自信地向大家分享自己的作品",
+                    "有時候太投入在自己的組裝世界裡而忽略了小組合作，適時抬頭看看同伴的做法也能激發新靈感",
+                    "面對同儕之間的小摩擦偶爾比較容易急躁，練習先深呼吸、冷靜表達需求是這個階段很棒的成長課題"
                 ]
             },
+
+            // 第六維度：工具歸位與環境善後
             cleanup: {
                 pos: [
-                    "課後總是主動收拾桌面，並確實檢查地面的整潔，非常負責任。", 
-                    "無須提醒便能迅速將工具與材料分類歸位，整理動作俐落確實。", 
-                    "具備極佳的環境維護意識，常主動協助整理公共區域，值得嘉許。", 
-                    "收拾環境迅速確實，且會主動提醒周遭同學共同將教室復原。", 
-                    "懂得愛惜公用工具，每次歸位都做得非常確實，好習慣值得肯定。",
-                    "除了整理個人座位，還會主動協助收拾共用工具，展現高度服務熱忱。",
-                    "${name}的整理收納能力很強，總能將凌亂的材料井然有序地放回原位。",
-                    "愛護教室環境，會主動清理桌面的髒污，是維護整潔的好榜樣。",
-                    "善後工作做得極為確實，有效提升了全班課後恢復環境的效率。",
-                    "對於垃圾分類非常清楚，總是能精確地將不同材質的廢棄物丟入對應的回收桶。"
+                    "下課前的善後習慣極佳，無須提醒就能主動將公用工具分類歸位，並把桌面與地面的殘料清理乾淨",
+                    "非常愛惜教室裡的科學器材，每次實作結束都會把零件與工具收納得井然有序，責任感十足",
+                    "不僅能迅速把自己座位的環境復原，還常主動幫忙收拾公共區域的材料，是維護教室整潔的好榜樣",
+                    "在整理收納上動作俐落確實，懂得區分可留用的材料與廢棄物，展現出極佳的創客工作習慣",
+                    "每次課程尾聲都能確實做到「工具歸位、垃圾入桶、椅子靠攏」，良好的自律習慣非常值得嘉許"
                 ],
                 neu: [
-                    "能配合班級規定，在下課前把自己的桌面和工具收好。", 
-                    "會依照老師的指示將物品歸位，負責地完成自己的善後工作。", 
-                    "清理動作確實，能確保個人座位區不遺留任何垃圾。", 
-                    "願意配合團體的收拾時間，工作效率良好，維持了環境的整潔。", 
-                    "能主動將自身使用的區域整理乾淨，具備基本的整潔觀念。",
-                    "下課時能確實留在座位上，將個人區域清理完畢後才離開教室。",
-                    "能配合班級動線，依序且守秩序地將實作工具歸還妥當。",
-                    "在提醒之下，能夠將地上的大塊碎屑撿起，維持基本的周遭整潔。",
-                    "能把自己抽屜裡的雜物帶走，確保不會遺留任何私人物品在科學教室中。",
-                    "每次皆能確實完成份內的收拾工作，對自己的環境整潔負責。"
+                    "在課程尾聲能配合班級規定，乖巧地把個人桌面的材料碎屑清理乾淨並將工具歸還到位",
+                    "下課前會依照老師的指示完成善後工作，確認自己的座位區域整潔後才離開教室",
+                    "具備基本的環境整潔觀念，在提醒下都能確實把使用過的公用器材放回指定的收納箱中",
+                    "能配合全班的收拾節奏，負責任地把自己的成品、剩餘材料與個人物品整理妥當",
+                    "每次實作結束後都能守規矩地完成份內的桌面清潔，沒有遺留垃圾或零件在座位上",
+                    "在歸還工具與收拾環境時配合度良好，能跟著下課動線依序把器材歸位並將座椅靠好",
+                    "對於個人工作區域的善後頗為負責，能按部就班地把散落的零件收好、維持桌面的基本整潔",
+                    "能聽從課後的收納引導，確實做好垃圾分類與個人工具清點，展現出良好的課堂常規"
                 ],
                 imp: [
-                    "偶爾會因急於下課而遺忘工具收納，經提醒後能立即返回整理。", 
-                    "整理桌面的速度稍慢，建議未來能學習更有效率的材料分類與收納。", 
-                    "尚需培養「隨手整理」的習慣，以保持實作過程中桌面的整潔。", 
-                    "實作時易將材料散落於桌面，建議養成邊做邊收的習慣。", 
-                    "器材歸位時偶爾會放錯位置，需再多加留意各項工具的正確擺放處。",
-                    "離開教室前常忘記將座椅靠攏，建議養成離開前再次環顧座位的習慣。",
-                    "收納工具箱時零件常擺放凌亂，需練習將其排列整齊後再蓋妥收納。",
-                    "剪裁材料後易忘記順手清理廢棄物，需加強對周遭環境整潔的敏銳度。",
-                    "收拾時較為粗心，偶爾會誤將公用工具與個人材料混淆，需多加留意。",
-                    "整理桌面時需更加仔細，務必確保沒有微小零件或碎屑遺落。"
+                    "實作過程中比較容易把零件與工具散落在桌面各處，建議養成「用完隨手歸位」的習慣才不會找不到材料",
+                    "下課前偶爾會因為急著想把玩成品而忘記收拾桌面，經老師提醒後都能乖乖回來把環境復原",
+                    "在將公用工具放回收納盒時偶爾會放錯格子或擺放較凌亂，多花十秒鐘對照一下分類標籤會更棒",
+                    "剪裁或組裝後的細小廢料偶爾會遺留在桌面或地板上，需要再多留意周遭環境的整潔細節",
+                    "收拾個人物品與材料的速度稍慢一些，建議在實作尾聲就可以先將用不到的工具分批歸位，提升收納效率"
+                ]
+            },
+
+            // 溫馨期許結尾池 (依據整體表現動態挑選)
+            closing: {
+                general: [
+                    "期待{name}在接下來的課程中繼續保持這份踏實的態度，一步步累積更多科學實作的成就感！",
+                    "相信透過每一次動手做的經驗累積，{name}對於生活中的科學原理會有越來越深刻的體會，繼續加油！",
+                    "很開心看到{name}在課堂中穩定成長，期待下個月的實作主題能帶給他更多動手探索的樂趣！",
+                    "科學實作的魅力就在於親手把想法變成現實，期待{name}接下來也能帶著這份耐心，完成更多棒作品！",
+                    "看著{name}一步一腳印地完成每次挑戰真的很替他開心，期待在未來的課堂上看到他更多自信的表現！",
+                    "每一次的組裝與測試都是很棒的養分，期待{name}在下個階段的課程裡持續享受動手做科學的過程！",
+                    "謝謝{name}這個月在課堂上的穩定配合與投入，期待接下來的全新主題能激發他更多對科學的好奇心！",
+                    "穩健的操作習慣是成為優秀創客的重要基石，期待{name}未來持續發揮所長，在科學課堂中收穫滿滿！"
+                ],
+                encourage: [
+                    "動手做科學本來就是一個不斷嘗試與修正的過程，相信只要多累積幾次經驗，{name}一定會越來越得心應手！",
+                    "每個孩子的學習步調都不同，我們會持續在課堂上給予引導與支持，陪伴{name}一步步建立實作的自信心！",
+                    "只要在課堂小細節上多加留意，相信以{name}的潛力，接下來的作品完成度與學習收穫一定會更上層樓！",
+                    "期待{name}在未來的課程中能更勇敢地嘗試與發問，我們都很期待看到他慢慢展現出屬於自己的創客光芒！",
+                    "透過每次課堂的練習與提醒，相信{name}能逐漸養成更成熟的學習與操作習慣，下個月我們繼續一起加油！"
                 ]
             }
         };
 
-        // 儲存已生成的評語 { "小明": "評語內容..." }
-        const historyData = {};
+        /**
+         * 2. 上下文轉折與銜接詞庫 (避免每次連接詞都一樣)
+         */
+        const connectorPool = {
+            // 第一段內部：個性 -> 聽講 (同向/平順)
+            p1_smooth: ["，平時", "，在課堂中", "，而在上課時", "；進入課程後，", "，同時"],
+            // 第一段內部：個性 -> 聽講 (正向/中性 轉 鼓勵/提醒)
+            p1_contrast: ["；不過在靜態聽講時，", "，然而在原理解說階段，", "；唯獨在理論講解環節，", "，但在聽課專注度上，"],
+            // 第一段內部：個性(慢熟) -> 聽講(正向/中性)
+            p1_reverse_contrast: ["，不過一旦開始上課，", "，但在聽講表現上卻相當定心，", "；然而在進入原理解說後，"],
 
-        function generateComment() {
-            const name = document.getElementById('studentName').value || "這位同學";
-            const dimensions = ['personality', 'lecture', 'handsOn', 'creative', 'social', 'cleanup'];
-            let resultParts = [];
+            // 第二段開頭：進入實作環節的場景轉換詞
+            p2_intro: [
+                "進入動手做環節後，",
+                "到了實際組裝與操作的階段，",
+                "在動手實作的過程中，",
+                "當課程推進到機構組裝時，",
+                "轉換到親手製作的時段，",
+                "在實際操作器材與零件時，"
+            ],
+            // 當前面聽講是分心(imp)，但實作是正向/中性時的特別轉折開頭
+            p2_intro_redeem: [
+                "不過一旦進入動手實作的環節，",
+                "然而到了實際組裝的階段，他卻能展現出穩定的一面，",
+                "好在進入親手操作的時段後，注意力便能重新聚焦，"
+            ],
 
-            dimensions.forEach(dim => {
-                const level = document.getElementById(dim).value;
-                const phrases = commentDb[dim][level];
-                // 隨機選一句
-                let phrase = phrases[Math.floor(Math.random() * phrases.length)];
-                resultParts.push(phrase);
-            });
+            // 第二段內部：實作 -> 創作延伸 (順接)
+            p2_to_creative_smooth: ["，而且", "，同時", "；此外，", "，在此基礎上，", "；而在作品呈現上，"],
+            // 第二段內部：實作 -> 創作延伸 (轉折：實作好但創作保守，或實作慢但成品還不錯)
+            p2_to_creative_contrast: ["；至於在延伸創作方面，", "，不過在自由發揮的環節，", "；而在作品的變化性上，"],
 
-            let finalComment = resultParts.join(' ');
-            finalComment = finalComment.replace(/\${name}/g, name);
+            // 第三段開頭：進入同儕與環境善後
+            p3_intro: [
+                "在班級相處與常規方面，",
+                "至於課堂互動與生活習慣上，",
+                "在團體共學的表現上，",
+                "此外，在課堂常規與人際方面，",
+                "在個人操作之外，"
+            ],
+            // 第三段內部：社交 -> 收拾 (順接/轉折)
+            p3_smooth: ["，而且", "，同時", "；在課程尾聲，", "，課後也"],
+            p3_contrast: ["；不過在課後善後方面，", "，唯獨在工具收納與整理時，", "；但在下課前的環境復原上，"]
+        };
 
-            document.getElementById('result').value = finalComment;
+        /**
+         * 3. 洗牌防撞抽籤袋演算法 (Shuffle Bag)
+         * 確保同一班級在句子用完一輪前，絕對不會抽到重複的句子或連接詞
+         */
+        const shuffleBags = {};
+
+        function drawFromBag(bagKey, sourceArray) {
+            if (!sourceArray || sourceArray.length === 0) return "";
+            if (!shuffleBags[bagKey] || shuffleBags[bagKey].length === 0) {
+                // 複製索引陣列並進行 Fisher-Yates 洗牌
+                const indices = sourceArray.map((_, idx) => idx);
+                for (let i = indices.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [indices[i], indices[j]] = [indices[j], indices[i]];
+                }
+                shuffleBags[bagKey] = indices;
+            }
+            const nextIndex = shuffleBags[bagKey].pop();
+            return sourceArray[nextIndex];
         }
 
-        function copyText() {
+        // 輔助判斷極性群組：'pos' 與 'neu' 視為廣義正向/穩定(1)，'imp' 與 'warn' 視為需提醒(-1)
+        function getPolarity(level) {
+            if (level === 'pos' || level === 'neu') return 1;
+            return -1;
+        }
+
+        /**
+         * 4. 快速套用學生原型預設值
+         */
+        function applyPreset(type) {
+            const presets = {
+                normal:  { personality: 'neu', lecture: 'neu', handsOn: 'neu', creative: 'neu', social: 'auto', cleanup: 'auto' },
+                star:    { personality: 'pos', lecture: 'pos', handsOn: 'pos', creative: 'pos', social: 'pos',  cleanup: 'pos' },
+                active:  { personality: 'pos', lecture: 'imp', handsOn: 'pos', creative: 'neu', social: 'neu',  cleanup: 'auto' },
+                shy:     { personality: 'imp', lecture: 'neu', handsOn: 'neu', creative: 'imp', social: 'auto', cleanup: 'neu' },
+                maker:   { personality: 'neu', lecture: 'neu', handsOn: 'pos', creative: 'pos', social: 'skip', cleanup: 'imp' }
+            };
+            const target = presets[type];
+            if (!target) return;
+            Object.keys(target).forEach(id => {
+                document.getElementById(id).value = target[id];
+            });
+            generateComment();
+        }
+
+        /**
+         * 5. 智慧語感合成引擎 (核心邏輯)
+         */
+        function generateComment() {
+            const rawName = document.getElementById('studentName').value.trim();
+            const name = rawName !== "" ? rawName : "這位同學";
+
+            const lvPers = document.getElementById('personality').value;
+            const lvLect = document.getElementById('lecture').value;
+            const lvHand = document.getElementById('handsOn').value;
+            const lvCrea = document.getElementById('creative').value;
+            let lvSoci   = document.getElementById('social').value;
+            let lvClea   = document.getElementById('cleanup').value;
+
+            // 處理第 5、6 向度的「🎲 智慧調配 (隨機擇一中性)」邏輯
+            if (lvSoci === 'auto' && lvClea === 'auto') {
+                // 隨機挑一個設為 neu，另一個設為 skip，確保全班結尾不會每個人都在擦桌子
+                if (Math.random() < 0.5) {
+                    lvSoci = 'neu';
+                    lvClea = 'skip';
+                } else {
+                    lvSoci = 'skip';
+                    lvClea = 'neu';
+                }
+            } else if (lvSoci === 'auto') {
+                lvSoci = (lvClea === 'skip') ? 'neu' : 'skip';
+            } else if (lvClea === 'auto') {
+                lvClea = (lvSoci === 'skip') ? 'neu' : 'skip';
+            }
+
+            // --- 【第一段：個性 + 聽講】 ---
+            let sPers = drawFromBag(`personality_${lvPers}`, commentDb.personality[lvPers]);
+            // 第一句必定將 {name} 替換為真實學生姓名
+            sPers = sPers.replace(/\{name\}/g, name);
+
+            let sLect = drawFromBag(`lecture_${lvLect}`, commentDb.lecture[lvLect]).replace(/\{name\}/g, "");
+            let p1Connector = "";
+            if (lvPers === 'imp' && getPolarity(lvLect) === 1) {
+                p1Connector = drawFromBag('conn_p1_rev', connectorPool.p1_reverse_contrast);
+            } else if (getPolarity(lvPers) === 1 && getPolarity(lvLect) === -1) {
+                p1Connector = drawFromBag('conn_p1_con', connectorPool.p1_contrast);
+            } else {
+                p1Connector = drawFromBag('conn_p1_smo', connectorPool.p1_smooth);
+            }
+            const paragraph1 = `${sPers}${p1Connector}${sLect}。`;
+
+            // --- 【第二段：實作 + 創作延伸】 ---
+            let p2Intro = "";
+            if (getPolarity(lvLect) === -1 && getPolarity(lvHand) === 1) {
+                p2Intro = drawFromBag('conn_p2_redeem', connectorPool.p2_intro_redeem);
+            } else {
+                p2Intro = drawFromBag('conn_p2_intro', connectorPool.p2_intro);
+            }
+
+            let sHand = drawFromBag(`handsOn_${lvHand}`, commentDb.handsOn[lvHand]).replace(/\{name\}/g, "");
+            let paragraph2 = "";
+
+            if (lvCrea === 'skip') {
+                paragraph2 = `${p2Intro}${sHand}。`;
+            } else {
+                let sCrea = drawFromBag(`creative_${lvCrea}`, commentDb.creative[lvCrea]).replace(/\{name\}/g, "");
+                let p2Conn = (getPolarity(lvHand) === getPolarity(lvCrea))
+                    ? drawFromBag('conn_p2_smo', connectorPool.p2_to_creative_smooth)
+                    : drawFromBag('conn_p2_con', connectorPool.p2_to_creative_contrast);
+                paragraph2 = `${p2Intro}${sHand}${p2Conn}${sCrea}。`;
+            }
+
+            // --- 【第三段：同儕社交 + 工具整理】 ---
+            let paragraph3 = "";
+            if (lvSoci !== 'skip' && lvClea !== 'skip') {
+                const p3Intro = drawFromBag('conn_p3_intro', connectorPool.p3_intro);
+                const sSoci = drawFromBag(`social_${lvSoci}`, commentDb.social[lvSoci]).replace(/\{name\}/g, "");
+                const sClea = drawFromBag(`cleanup_${lvClea}`, commentDb.cleanup[lvClea]).replace(/\{name\}/g, "");
+                const p3Conn = (getPolarity(lvSoci) === 1 && getPolarity(lvClea) === -1)
+                    ? drawFromBag('conn_p3_con', connectorPool.p3_contrast)
+                    : drawFromBag('conn_p3_smo', connectorPool.p3_smooth);
+                paragraph3 = `${p3Intro}${sSoci}${p3Conn}${sClea}。`;
+            } else if (lvSoci !== 'skip') {
+                const p3Intro = drawFromBag('conn_p3_intro', connectorPool.p3_intro);
+                const sSoci = drawFromBag(`social_${lvSoci}`, commentDb.social[lvSoci]).replace(/\{name\}/g, "");
+                paragraph3 = `${p3Intro}${sSoci}。`;
+            } else if (lvClea !== 'skip') {
+                const sClea = drawFromBag(`cleanup_${lvClea}`, commentDb.cleanup[lvClea]).replace(/\{name\}/g, "");
+                // 單獨講整理時，用自然的時間詞帶出
+                const soloCleanupIntros = ["在課程尾聲的善後環節，", "至於課後的器材整理方面，", "此外，在每次下課前的收納時間，"];
+                const cIntro = drawFromBag('conn_solo_clean', soloCleanupIntros);
+                paragraph3 = `${cIntro}${sClea}。`;
+            }
+
+            // --- 【第四段：溫馨期許結語 (可選)】 ---
+            let paragraph4 = "";
+            const needClosing = document.getElementById('addClosing').checked;
+            if (needClosing) {
+                // 若有超過 2 個以上的 imp/warn，選擇鼓勵型結語，否則選擇一般肯定結語
+                const negCount = [lvPers, lvLect, lvHand, lvCrea, lvSoci, lvClea].filter(v => v === 'imp' || v === 'warn').length;
+                const closingType = negCount >= 2 ? 'encourage' : 'general';
+                let sClose = drawFromBag(`closing_${closingType}`, commentDb.closing[closingType]);
+                // 結尾再次自然呼喚一次學生名字，首尾呼應
+                sClose = sClose.replace(/\{name\}/g, name);
+                paragraph4 = sClose;
+            }
+
+            // 組合最終文字並清理多餘標點
+            let finalComment = `${paragraph1}${paragraph2}${paragraph3}${paragraph4}`;
+            finalComment = finalComment.replace(/，，/g, "，").replace(/。。/g, "。");
+
+            document.getElementById('result').value = finalComment;
+            updateCharCount();
+        }
+
+        function updateCharCount() {
+            const text = document.getElementById('result').value.trim();
+            const len = text.length;
+            const badge = document.getElementById('charCountBadge');
+            badge.textContent = `字數：${len} 字`;
+
+            if (len >= 85 && len <= 175) {
+                badge.className = "text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800";
+            } else if (len > 175) {
+                badge.className = "text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800";
+            } else {
+                badge.className = "text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600";
+            }
+        }
+
+        /**
+         * 6. 剪貼簿複製與 LocalStorage 本地持久化紀錄管理
+         */
+        const STORAGE_KEY = 'steam_comment_history_v2';
+        let historyData = {};
+
+        function loadHistoryFromStorage() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    historyData = JSON.parse(saved);
+                    renderHistory();
+                }
+            } catch (e) {
+                console.warn('無法讀取 LocalStorage 紀錄', e);
+            }
+        }
+
+        function saveHistoryToStorage() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(historyData));
+            } catch (e) {
+                console.warn('無法寫入 LocalStorage 紀錄', e);
+            }
+        }
+
+        async function copyText() {
             const resultText = document.getElementById('result');
             const comment = resultText.value.trim();
-            
-            if(!comment) {
+
+            if (!comment) {
                 alert('請先點擊生成評語喔！');
                 return;
             }
 
-            // 複製到剪貼簿
-            resultText.select();
-            document.execCommand('copy');
-            
-            // 記錄到暫存區
+            try {
+                await navigator.clipboard.writeText(comment);
+            } catch (err) {
+                resultText.select();
+                document.execCommand('copy');
+            }
+
             const nameInput = document.getElementById('studentName').value.trim();
             const studentName = nameInput !== "" ? nameInput : "未命名學生";
-            
-            updateHistory(studentName, comment);
-            
-            // 視覺回饋
-            const btn = event.currentTarget;
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '✅ 已複製！';
-            btn.classList.add('bg-emerald-600');
+
+            historyData[studentName] = comment;
+            saveHistoryToStorage();
+            renderHistory();
+
+            // 按鈕視覺回饋
+            const btn = document.getElementById('copyBtn');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '✅ 已複製並記錄！';
+            btn.classList.replace('bg-slate-800', 'bg-emerald-600');
             setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.classList.remove('bg-emerald-600');
+                btn.innerHTML = originalHTML;
+                btn.classList.replace('bg-emerald-600', 'bg-slate-800');
             }, 1500);
         }
 
-        function updateHistory(name, comment) {
-            // 更新資料
-            historyData[name] = comment;
+        async function copyAllHistory() {
+            const entries = Object.entries(historyData);
+            if (entries.length === 0) {
+                alert('目前暫存區還沒有任何學生的記錄喔！');
+                return;
+            }
+            const formatted = entries.map(([name, comment], idx) => `${idx + 1}. 【${name}】\n${comment}`).join('\n\n');
+            try {
+                await navigator.clipboard.writeText(formatted);
+                alert(`已成功複製全班共 ${entries.length} 位學生的評語總表！`);
+            } catch (e) {
+                alert('複製失敗，請手動選取複製。');
+            }
+        }
+
+        function deleteSingleHistory(name) {
+            delete historyData[name];
+            saveHistoryToStorage();
             renderHistory();
+        }
+
+        function clearHistory() {
+            if (Object.keys(historyData).length === 0) return;
+            if (confirm('確定要清空本班目前暫存的所有學生評語嗎？')) {
+                historyData = {};
+                saveHistoryToStorage();
+                renderHistory();
+            }
         }
 
         function renderHistory() {
             const container = document.getElementById('historyContainer');
-            const emptyMsg = document.getElementById('emptyMsg');
-            
-            // 隱藏空訊息提示
-            if(emptyMsg) emptyMsg.style.display = 'none';
-            
-            container.innerHTML = '';
-            
-            // 將物件轉為陣列並反轉，讓最新記錄在最上面 (視需求調整)
+            const countBadge = document.getElementById('recordCount');
             const entries = Object.entries(historyData).reverse();
+
+            countBadge.textContent = `${entries.length} 位學生`;
+            container.innerHTML = '';
+
+            if (entries.length === 0) {
+                container.innerHTML = '<p class="text-slate-400 text-sm text-center py-6" id="emptyMsg">尚未有任何記錄，按下「複製並存入下方紀錄」後會自動保存在這裡。</p>';
+                return;
+            }
 
             entries.forEach(([name, comment]) => {
                 const item = document.createElement('div');
-                item.className = "bg-white p-3 rounded-lg border border-gray-100 shadow-sm flex flex-col gap-1";
+                item.className = "bg-slate-50 hover:bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col gap-1.5 transition group";
                 item.innerHTML = `
-                    <div class="font-bold text-emerald-800 text-sm">👤 ${name}</div>
-                    <div class="text-gray-600 text-xs leading-relaxed">${comment}</div>
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-emerald-800 text-sm">👤 ${name} <span class="text-xs font-normal text-slate-400 ml-1">(${comment.length}字)</span></span>
+                        <button onclick="deleteSingleHistory('${name.replace(/'/g, "\\'")}')" class="text-xs text-slate-400 hover:text-rose-600 opacity-0 group-hover:opacity-100 transition px-2 py-0.5 rounded">移除</button>
+                    </div>
+                    <div class="text-slate-600 text-xs leading-relaxed select-all">${comment}</div>
                 `;
                 container.appendChild(item);
             });
         }
+
+        // 頁面載入時初始化歷史紀錄並預先生成一組範例
+        window.addEventListener('DOMContentLoaded', () => {
+            loadHistoryFromStorage();
+        });
     </script>
 </body>
 </html>
